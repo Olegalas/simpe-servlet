@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Scanner;
 
 public class SimpleServlet extends HttpServlet {
 
@@ -15,7 +17,41 @@ public class SimpleServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        readParam(req);
         resp.getWriter().println("Hello World");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        readBody(req);
+        readParam(req);
+        resp.getWriter().println("Hello World");
+    }
+
+    private void readBody(HttpServletRequest req) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        Scanner scanner = new Scanner(req.getInputStream());
+        while (scanner.hasNext()) {
+            sb.append(scanner.nextLine());
+        }
+        log.info("Body : {}", sb);
+    }
+
+    private void readParam(HttpServletRequest req) {
+
+        Enumeration<String> headerNames = req.getHeaderNames();
+        while (headerNames.hasMoreElements()){
+            String headerName = headerNames.nextElement();
+            log.info("Header name : {}, value : {}", headerName, req.getHeader(headerName));
+        }
+
+        req.getParameterMap().forEach((k ,v) -> {
+            log.info("Key : {}", k);
+            for(String value : v){
+                log.info("Value : {}", value);
+            }
+        });
+
     }
 
     @Override

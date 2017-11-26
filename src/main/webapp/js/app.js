@@ -1,4 +1,13 @@
 function loadDoc() {
+
+    let user = {
+
+        id : 1,
+        name : 'DEX',
+        email : 'email@gmail.com'
+
+    };
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -6,8 +15,8 @@ function loadDoc() {
                 this.responseText;
         }
     };
-    xhttp.open("GET", "/hello", true);
-    xhttp.send();
+    xhttp.open("POST", "/hello?id=1&id=2", true);
+    xhttp.send(JSON.stringify(user));
 }
 
 let websocket = new WebSocket("ws://localhost:8080/chat");
